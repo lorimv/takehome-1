@@ -2,11 +2,28 @@
 {
     using System;
     using System.IO;
+    using System.Net.Http;
 
     static class Program
     {
+        static readonly HttpClient client = new HttpClient();
+
+        static async Task Downloader(String url)
+        {
+            try
+            {
+                using HttpResponseMessage response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+                Console.WriteLine("YES");
+            }
+            catch (HttpRequestException e)
+            {
+                Console.WriteLine("UHHHHHHHHH OHHHHHHH" + e);
+            }
+        }
+
         // find out why this throws a null type warning
-        static void ParseFile(String filePath)
+        static async Task ParseFile(String filePath)
         {
             if (File.Exists(filePath))
             {
@@ -16,6 +33,7 @@
                     while (S != null)
                     {
                         Console.WriteLine(S);
+                        await Downloader(S);
                         S = SR.ReadLine();
                     }
                 }
@@ -23,11 +41,11 @@
             else { Console.WriteLine("UH OH!"); }
         }
 
-        static void Main()
+        static async Task Main()
         {
             Console.WriteLine("main;");
             Console.WriteLine("hi");
-            ParseFile("/home/XXXXXXXXXX/Downloads/list");
+            await ParseFile("/home/NOOOPE/Downloads/list");
         }
     }
 }
