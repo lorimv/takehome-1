@@ -33,7 +33,10 @@
                     while (S != null)
                     {
                         Console.WriteLine(S);
-                        await Downloader(S);
+                        Console.WriteLine("Bouta go to Main");
+                        //await Downloader(S);
+                        await Task.Delay(400);
+                        while (true) {Console.Write(".");}
                         S = SR.ReadLine();
                     }
                 }
@@ -45,7 +48,12 @@
         {
             Console.WriteLine("main;");
             Console.WriteLine("hi");
-            await ParseFile("/home/NOOOPE/Downloads/list");
+            Task parsed =  ParseFile("/home/X/Downloads/list");
+            Console.WriteLine("Gone 2 main");
+            await Task.Delay(900);
+            Console.WriteLine("Waited N Main");
+            await parsed;
+
         }
     }
 }
