@@ -8,18 +8,19 @@
     {
         static readonly HttpClient client = new HttpClient();
 
-        // TODO move download
+        // TODO move download functions to separate class
         static async Task Downloader(String url)
         {
             try
             {
+                // TODO replace response code with an actual download
                 using HttpResponseMessage response = await client.GetAsync(url);
                 response.EnsureSuccessStatusCode();
-                Console.WriteLine("YES");
+                Console.WriteLine("Connected.");
             }
             catch (HttpRequestException e)
             {
-                Console.WriteLine("UHHHHHHHHH OHHHHHHH" + e);
+                Console.WriteLine("Connection error: " + e);
             }
         }
 
@@ -32,7 +33,6 @@
                 using (StreamReader SR = new StreamReader(filePath))
                 {
                     String S = SR.ReadLine();
-                    // TODO add to a list of tasks, await after loop
                     while (S != null)
                     {
                         Console.WriteLine(S);
@@ -42,13 +42,14 @@
                     await Task.WhenAll(downloadTasks);
                 }
             }
-            else { Console.WriteLine("UH OH!"); }
+            else { Console.WriteLine("File not found!"); }
         }
 
         static async Task Main()
         {
+            Console.WriteLine("Please enter your filepath:");
             await ParseFile(Console.ReadLine());
-            // await ParseFile("/home/KOXXSX/Downloads/list");
+            // await ParseFile("/home/XXXXXXXXX/Downloads/list");
         }
     }
 }
