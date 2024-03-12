@@ -8,6 +8,7 @@
     {
         static readonly HttpClient client = new HttpClient();
 
+        // TODO move download
         static async Task Downloader(String url)
         {
             try
@@ -22,23 +23,23 @@
             }
         }
 
-        // find out why this throws a null type warning
+        // null type warning, bc SR.ReadLine will assign null to S?
         static async Task ParseFile(String filePath)
         {
             if (File.Exists(filePath))
             {
+                List<Task> downloadTasks = new List<Task>();
                 using (StreamReader SR = new StreamReader(filePath))
                 {
                     String S = SR.ReadLine();
+                    // TODO add to a list of tasks, await after loop
                     while (S != null)
                     {
                         Console.WriteLine(S);
-                        Console.WriteLine("Bouta go to Main");
-                        //await Downloader(S);
-                        await Task.Delay(400);
-                        while (true) {Console.Write(".");}
+                        downloadTasks.Add(Downloader(S));
                         S = SR.ReadLine();
                     }
+                    await Task.WhenAll(downloadTasks);
                 }
             }
             else { Console.WriteLine("UH OH!"); }
@@ -46,14 +47,8 @@
 
         static async Task Main()
         {
-            Console.WriteLine("main;");
-            Console.WriteLine("hi");
-            Task parsed =  ParseFile("/home/X/Downloads/list");
-            Console.WriteLine("Gone 2 main");
-            await Task.Delay(900);
-            Console.WriteLine("Waited N Main");
-            await parsed;
-
+            await ParseFile(Console.ReadLine());
+            // await ParseFile("/home/KOXXSX/Downloads/list");
         }
     }
 }
