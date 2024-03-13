@@ -8,7 +8,7 @@ static class CsvParser
 
     public static void ReadCsv(Stream stream)
     {
-        // TODO add id arg? or make the whole class Csv and give it an id var
+        // TODO add id arg? or make the class a Csv object with an id var
         try
         {
             using (TextFieldParser parser = new TextFieldParser(stream))
@@ -18,12 +18,15 @@ static class CsvParser
                 parser.SetDelimiters(",");
                 string[] row;
 
+                // skip headers (assume ZipCode is always index 8)
                 if (!parser.EndOfData) { parser.ReadFields(); }
+
                 while (!parser.EndOfData)
                 {
-                    row = parser.ReadFields()!;
-                    if (row.Length > 8) // error when async? (threw System.InvalidOperationException)
+                    row = parser.ReadFields()!; // 99.9% sure this cannot be null
+                    if (row.Length > 8) // TODO && zip is 5 digits?
                     {
+                        // add zip & set occurrences to 1, or increment occurrences
                         zips.AddOrUpdate(row[8], 1, (k, v) => v++);
                     }
                 }
