@@ -9,7 +9,7 @@
         static readonly HttpClient client = new HttpClient();
 
         // TODO move download functions to separate class
-        static async Task Downloader(String uri)
+        static async Task FetchCsv(String uri)
         {
             try
             {
@@ -19,6 +19,7 @@
                 using (var stream = await client.GetStreamAsync(uri))
                 {
                     // call a function to parse the stream
+                    // (demo fn)
                     using var SR = new StreamReader(stream);
                     Console.WriteLine(SR.ReadLine());
                 }
@@ -34,20 +35,23 @@
         {
             if (File.Exists(filePath))
             {
-                List<Task> downloadTasks = new List<Task>();
+                List<Task> csvStreams = new List<Task>();
                 using (StreamReader SR = new StreamReader(filePath))
                 {
-                    String S = SR.ReadLine();
-                    while (S != null)
+                    String uri = SR.ReadLine();
+                    while (uri != null)
                     {
-                        Console.WriteLine(S);
-                        downloadTasks.Add(Downloader(S));
-                        S = SR.ReadLine();
+                        Console.WriteLine(uri);
+                        csvStreams.Add(FetchCsv(uri));
+                        uri = SR.ReadLine();
                     }
-                    await Task.WhenAll(downloadTasks);
+                    await Task.WhenAll(csvStreams);
                 }
             }
-            else { Console.WriteLine("File not found!"); }
+            else
+            {
+                Console.WriteLine("File not found!");
+            }
         }
 
         static async Task Main()
