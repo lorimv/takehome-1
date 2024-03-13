@@ -38,10 +38,7 @@ static class UriHandler
             using (var stream = await client.GetStreamAsync(uri))
             {
                 // call a function to parse the stream
-                // (demo fn)
                 CsvParser.ReadCsv(stream);
-                // using var SR = new StreamReader(stream);
-                // Console.WriteLine(SR.ReadLine());
             }
         }
         catch (HttpRequestException e)
