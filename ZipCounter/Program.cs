@@ -9,14 +9,19 @@
         static readonly HttpClient client = new HttpClient();
 
         // TODO move download functions to separate class
-        static async Task Downloader(String url)
+        static async Task Downloader(String uri)
         {
             try
             {
-                // TODO replace response code with an actual download
-                using HttpResponseMessage response = await client.GetAsync(url);
+                using HttpResponseMessage response = await client.GetAsync(uri);
                 response.EnsureSuccessStatusCode();
                 Console.WriteLine("Connected.");
+                using (var stream = await client.GetStreamAsync(uri))
+                {
+                    // call a function to parse the stream
+                    using var SR = new StreamReader(stream);
+                    Console.WriteLine(SR.ReadLine());
+                }
             }
             catch (HttpRequestException e)
             {
@@ -49,7 +54,6 @@
         {
             Console.WriteLine("Please enter your filepath:");
             await ParseFile(Console.ReadLine());
-            // await ParseFile("/home/XXXXXXXXX/Downloads/list");
         }
     }
 }
