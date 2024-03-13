@@ -11,7 +11,11 @@
             Console.WriteLine("Please enter your filepath:");
             // possible null
             await UriHandler.ParseFile(Console.ReadLine());
-            Console.WriteLine(CsvParser.GetZips());
+            Dictionary<String, int> result = CsvParser.GetZips();
+            foreach (KeyValuePair<String, int> kvp in result)
+            {
+                Console.WriteLine("Key = {0}, Value = {1}", kvp.Key, kvp.Value);
+            }
         }
     }
 }

@@ -3,25 +3,43 @@ using Microsoft.VisualBasic.FileIO;
 
 static class CsvParser
 {
-    // we'll have a static dict or something to count zip codes
-    static int zips = 0;
+    static Dictionary<String, int> zips = new Dictionary<string, int>();
 
     public static void ReadCsv(Stream stream)
     {
-        using (TextFieldParser parser = new TextFieldParser(stream))
+        // TODO add id arg? or make the whole class Csv and give it an id var
+        try
         {
-            Console.WriteLine("reading csv...");
-            parser.TextFieldType = FieldType.Delimited;
-            parser.SetDelimiters(",");
-            while (!parser.EndOfData)
+            using (TextFieldParser parser = new TextFieldParser(stream))
             {
-                // TODO add counting logic
-                parser.ReadFields();
+                Console.WriteLine("reading csv...");
+                parser.TextFieldType = FieldType.Delimited;
+                parser.SetDelimiters(",");
+                string[] row;
+
+                while (!parser.EndOfData)
+                {
+                    // TODO filter out "ZipCode" str
+                    row = parser.ReadFields();
+                    if (zips.ContainsKey(row[8])) // error when async? (threw System.InvalidOperationException)
+                    {
+                        zips[row[8]]++;
+                    }
+                    else
+                    {
+                        zips.Add(row[8], 1);
+                    }
+                }
+                Console.WriteLine("read complete.");
             }
+        }
+        catch (ArgumentException e)
+        {
+            Console.WriteLine("Stream cannot be read: " + e);
         }
     }
 
-    public static int GetZips()
+    public static Dictionary<String, int> GetZips()
     {
         return zips;
     }
