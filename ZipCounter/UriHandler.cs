@@ -1,6 +1,6 @@
 ﻿namespace ZipCounter;
 
-public class UriHandler
+static class UriHandler
 {
     static readonly HttpClient client = new HttpClient();
 
@@ -39,8 +39,9 @@ public class UriHandler
             {
                 // call a function to parse the stream
                 // (demo fn)
-                using var SR = new StreamReader(stream);
-                Console.WriteLine(SR.ReadLine());
+                CsvParser.ReadCsv(stream);
+                // using var SR = new StreamReader(stream);
+                // Console.WriteLine(SR.ReadLine());
             }
         }
         catch (HttpRequestException e)
