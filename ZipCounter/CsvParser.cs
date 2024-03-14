@@ -24,10 +24,10 @@ static class CsvParser
                 while (!parser.EndOfData)
                 {
                     row = parser.ReadFields()!; // 99.9% sure this cannot be null
-                    if (row.Length > 8) // TODO && zip is 5 digits?
+                    if (row.Length > 8) // TODO i think leading 0's are cut?
                     {
                         // add zip & set occurrences to 1, or increment occurrences
-                        zips.AddOrUpdate(row[8], 1, (k, v) => v++);
+                        zips.AddOrUpdate(row[8].PadLeft(5, '0'), 1, (k, v) => v + 1);
                     }
                 }
                 Console.WriteLine("read complete.");
